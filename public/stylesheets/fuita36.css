@@ -70,8 +70,13 @@ img {
   padding:0;
 }
 /*---------- main -----------*/
+@font-face {
+ font-family:antiqueplus;
+ src:url("../fonts/GL-AntiquePlus.ttf") format("truetype")
+}
 body {
-  background: url(../images/styles//bg.jpg);
+  margin: 0 auto;
+  background: url(../images/styles/bg.jpg);
 }
 html, body, #wrapper {
   width: 100%;
@@ -110,26 +115,47 @@ html, body, #wrapper {
   -webkit-box-shadow: 1px 1px 0 2px #775423;
 }
 
- #dialog-overlay {
-    display:none;
-    background: black;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    opacity: 0.6;
- }
+/*----------dialog----------*/
+#dialog-overlay {
+  display:none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  opacity: 0.6;
+  background: black;
+  z-index: 99;
+}
 #dialog {
   display:none;
-  background: white;
-  width: 500px;
-  height: 400px;
   position: fixed;
-  top: 100px;
-  left: 250px;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 370px;
+  box-sizing: border-box;
+  padding: 100px 70px 90px;
+  margin: -175px 0 0 -300px;
+  text-align: center;
+  background: #fff url(../images/styles/dialogbox.jpg) no-repeat;
+  z-index: 999;
+  font-family:antiqueplus;
 }
+#dialog .title {
+  margin-bottom: 40px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #715c1f;
+}
+#dialog .textBody {
+  padding-bottom: 8px;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+/*---------- debug ----------*/
 #debug {
   position:fixed;
-  z-index:100;
+  z-index:9999;
 }
