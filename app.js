@@ -93,6 +93,7 @@ var fileHandler = function (path, data, socket) {
 
 // 画像から動画へのエンコード
 var videoEncode = function (uid, socket) {
+    console.log('start videoEncode');
     var cmd = 'ffmpeg -i ' + './public/images/' + uid + '/%d.jpeg ./public/mov/' + uid + '/' + uid + '.avi';
     exec(cmd, {timeout: 5000},
         function (error, stdout, stderr) {
