@@ -12,7 +12,6 @@ var express = require('express')
   , redis = require("redis")
   , client = redis.createClient();
 
-
 var app = express();
 
 app.configure(function(){
