@@ -64,8 +64,7 @@ UniqueId.prototype = {
 // 画像の保存先どうするか？
 var fileHandler = function (path, data, socket) {
     console.log('Start write file');
-    var imgPath = './public/images/' + path,
-    data = new Buffer(data, 'base64');
+    var imgPath = './public/images/' + path;
     socket = socket;
 
     console.log('imgPath : ' + imgPath);
@@ -77,8 +76,9 @@ var fileHandler = function (path, data, socket) {
         writeFile :  function() {
             //var execEncode = execEncode;
             for (var i = 0; i < data.length; i++) {
-                console.log('data : ' + data[i]);
-                fs.writeFile(imgPath , data[i] + '.jpeg', function (err, data) {
+                var binary = new Buffer(data[i], 'base64');
+                //console.log('data : ' + data[i]);
+                fs.writeFile(imgPath + '/' + i + '.jpeg', binary, function (err, data) {
                     if (err) {
                         console.log(err);
                     }
