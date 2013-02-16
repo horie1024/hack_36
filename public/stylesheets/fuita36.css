@@ -1,5 +1,5 @@
 @charset "UTF-8";
-z/* html5doctor.com Reset v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/) - http://cssreset.com */
+/* html5doctor.com Reset v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/) - http://cssreset.com */
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
   margin:0;
   padding:0;
@@ -71,7 +71,7 @@ img {
 }
 /*---------- main -----------*/
 body {
-  background: url(../img/bg.jpg);
+  background: url(../images/styles//bg.jpg);
 }
 html, body, #wrapper {
   width: 100%;
@@ -98,7 +98,7 @@ html, body, #wrapper {
   box-sizing: border-box;
   background: -webkit-gradient(linear, left top, left bottom, from(#c4bca7), color-stop(0.5, #c4bca7), to(#c4bca7));
   background: #EBE4D4;
-  background: url(../img/pict-bg.jpg);
+  background: url(../images/styles/pict-bg.jpg);
   text-align: center;
 }
 .pictWrap .pict img {
@@ -108,4 +108,28 @@ html, body, #wrapper {
   margin-left: -121px;
   border: solid 4px #8e652d;
   -webkit-box-shadow: 1px 1px 0 2px #775423;
+}
+
+ #dialog-overlay {
+    display:none;
+    background: black;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    opacity: 0.6;
+ }
+#dialog {
+  display:none;
+  background: white;
+  width: 500px;
+  height: 400px;
+  position: fixed;
+  top: 100px;
+  left: 250px;
+}
+#debug {
+  position:fixed;
+  z-index:100;
 }

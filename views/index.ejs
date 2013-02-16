@@ -1,39 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/stylesheets/fuita36.css' />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="/javascripts/jquery.hoverpulse.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <style type="text/css">
-    <!--
-    #dialog-overlay {
-      display:none;
-      background: black;
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0px;
-      left: 0px;
-      opacity: 0.6;
-     }
-     #dialog {
-      display:none;
-      background: white;
-      width: 500px;
-      height: 400px;
-      position: fixed;
-      top: 100px;
-      left: 250px;
-    }
-    -->
-    </style>
   </head>
   <body>
     <script>
       $(document).ready(function(){
            //var socket = io.connect('http://localhost');
-           var target = $("#pictures");
+           var target = $("#wrapper");
 
            //stub
            var data = [{"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/b/1/b122bfe5.gif" }, {"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/1/c/1cc43e81.gif" }]
@@ -58,8 +37,9 @@
               for (var i = data.length - 1; i >= 0; i--) {
                 addImg(data[i]);
               };
+              $(".fuitaPicture").hoverpulse();
             }                 
-            
+             
             function fuita (data) {
               showDialog();
               console.log("fuitad:" + data);
@@ -69,8 +49,11 @@
             //gifをDOMに追加する
             function addImg (img) {
                console.log(img);
-               var picture = $('<img id="pictures" src="' + img.gif +'">');
+               var picture = $('<div class="pictWrap"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
                target.prepend(picture);
+               picture.click(function(){
+                  console.log("clicked");
+               });
             }
 
             //吹いたダイアログ表示
@@ -86,7 +69,6 @@
                 overlay.hide();
                 dialog.hide();
               }, 1000);
-
             } 
          });
     </script>
@@ -95,10 +77,12 @@
   <p>吹いたｗｗｗｗｗｗｗｗ</p>
 </div>
 <header>
-  <button id="init">初期化</button>
-  <button id="fuita">ふいた</button>
+  <div id="debug">
+    <button id="init">初期化</button>
+    <button id="fuita">ふいた</button>
+  </div>
 </header>
-<div id="pictures"></div>
+<div id="wrapper"></div>
 <footer></footer>
 </body>
 </html>
