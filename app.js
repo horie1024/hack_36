@@ -71,7 +71,7 @@ var fileHandler = function (path, data, socket) {
     console.log('imgPath : ' + imgPath);
 
     fs.mkdir(imgPath);
-    fs.mkdir('./public/mov');
+    fs.mkdir('./public/mov/' + path);
     executeSync();
     return {
         writeFile :  function() {
@@ -86,14 +86,30 @@ var fileHandler = function (path, data, socket) {
             }
             console.log('start create gif');
             gifEncode(path, socket);
+            console.log('start create video');
+            videoEncode(path, socket);
         }
     };
 };
 
 // 画像から動画へのエンコード
 var videoEncode = function (uid, socket) {
-    var cmd = 'ffmpeg -i ' + uid + '/%06d.jpg ./mov/' + uid + '.avc';
-    execCommand(cmd, socket);
+    var cmd = 'ffmpeg -i ' + './public/images/' + uid + '/%d.jpeg ./public/mov/' + uid + '/' + uid + '.avi';
+    exec(cmd, {timeout: 5000},
+        function (error, stdout, stderr) {
+            console.log('stdout: '+(stdout||'none'));
+            console.log('stderr: '+(stderr||'none'));
+
+            var cmd = 'ffmpeg -i ./public/mov/' + uid + '/' + uid + '.avi -f mp4 ./public/mov/' + uid + '/' + uid +'.mp4';
+            exec(cmd, {timeout: 5000},
+                function (error, stdout, stderr) {
+                    console.log('stdout: '+(stdout||'none'));
+                    console.log('stderr: '+(stderr||'none'));
+                    socket.emit('video_ok', {'data':'the origin video convet to mp4 is done.'});
+                }
+            )
+        }
+    )
 };
 
 // 画像からgifへのエンコード
@@ -106,7 +122,7 @@ var gifEncode = function (uid, socket) {
             var data = [
                 {
                     'origin' : 'mov/' + uid + '/' + uid + '.mp4',
-                    'gif' : 'images/' + uid + '.gif'
+                    'gif' : 'images/' + uid + '/' + uid + '.gif'
                 }
             ];
 
@@ -227,6 +243,12 @@ io.sockets.on('connection', function (socket) {
 
         fileHandler(uid, data.frames, socket).writeFile();
 
+    });
+
+    // FEから動画の問い合わせがあった場合
+    socket.on('fuita?', function (data) {
+        console.log('receive fuita? from FE');
+        aaaa
     });
 
     // FE側との調整して仕様決定
