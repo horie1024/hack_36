@@ -9,8 +9,16 @@ $(document).ready(function(){
 //      fuita(init);
 //  });  
 //  socket.on('fuita', function (data) {
+//      fileCheck(url);
+//  });  
+
+//  socket.on('hoge', function (data) {
 //      fuita(data);
 //  });  
+
+   function fileCheck (url) {
+      socket.emit('url', url);
+   }
 
    $("#init").click(function () {
        init(data);
@@ -25,7 +33,6 @@ $(document).ready(function(){
      for (var i = data.length - 1; i >= 0; i--) {
        addImg(data[i]);
      };
-     $(".fuitaPicture").hoverpulse();
    }                 
     
    function fuita (data) {
@@ -34,14 +41,16 @@ $(document).ready(function(){
      addImg(data[0]);
    }
 
+
    //gifをDOMに追加する
    function addImg (img) {
       console.log(img);
       var picture = $('<div class="pictWrap"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
       target.prepend(picture);
       picture.click(function(){
-         console.log("clicked");
+         console.log(img.gif);
       });
+      picture.filter(".pictWrap").hoverpulse();
    }
 
    //吹いたダイアログ表示
