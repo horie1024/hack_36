@@ -3,54 +3,59 @@ $(document).ready(function(){
   var target = $("#wrapper");
 
   //stub
-  var data = [{"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/b/1/b122bfe5.gif" }, {"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/1/c/1cc43e81.gif" }]
+  var data = [{"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/b/1/b122bfe5.gif" }, {"id":"2", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/1/c/1cc43e81.gif" }]
 
 //  socket.on('init', function (data) {
-//      fuita(init);
-//  });  
+//    fuita(init);
+//  }); 
+//
 //  socket.on('fuita', function (data) {
-//      fileCheck(url);
+//    fuita(data);
 //  });  
+//
+//  socket.on('video_ok', function(data) {
+//    addMovie(data);
+//  });
 
-//  socket.on('hoge', function (data) {
-//      fuita(data);
-//  });  
+  $("#init").click(function () {
+      init(data);
+  });
+  $("#fuita").click(function () {
+      fuita(data);
+  });
+  $("#video_ok").click(function () {
+      addMovie(data[0]);
+  });
 
-   function fileCheck (url) {
-      socket.emit('url', url);
-   }
-
-   $("#init").click(function () {
-       init(data);
-   });
-   $("#fuita").click(function () {
-       fuita(data);
-   });
-
-   function init (data) {
-     console.log("inited:" + data);
-     target.html('');
-     for (var i = data.length - 1; i >= 0; i--) {
-       addImg(data[i]);
-     };
-   }                 
+  function init (data) {
+    console.log("inited:" + data);
+    target.html('');
+    for (var i = data.length - 1; i >= 0; i--) {
+      addImg(data[i]);
+    };
+  }                 
     
-   function fuita (data) {
-     showDialog();
-     console.log("fuitad:" + data);
-     addImg(data[0]);
-   }
+  function fuita (data) {
+    showDialog();
+    console.log("fuitad:" + data);
+    addImg(data[0]);
+  }
 
+  function addMovie (data) {
+    var id = "#fuita_" + data.id;
+    console.log("movie:" + id);
+    $(id).append('<video　src＝”'+ data.origin +' style="display:none"></video>');
+  }
 
    //gifをDOMに追加する
    function addImg (img) {
       console.log(img);
-      var picture = $('<div class="pictWrap"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
+      var picture = $('<div class="pictWrap" id="fuita_'+ img.id +'"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
       target.prepend(picture);
       picture.click(function(){
          console.log(img.gif);
       });
-      picture.filter(".pictWrap").hoverpulse();
+//     picture.filter(".pictWrap").hoverpulse();
    }
 
    //吹いたダイアログ表示
