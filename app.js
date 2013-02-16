@@ -71,14 +71,13 @@ var fileHandler = function (path, data, socket) {
 
     fs.mkdir(imgPath);
     fs.mkdir('./public/mov/' + path);
-    executeSync();
     return {
         writeFile :  function() {
             //var execEncode = execEncode;
             for (var i = 0; i < data.length; i++) {
                 var binary = new Buffer(data[i], 'base64');
                 //console.log('data : ' + data[i]);
-                fs.writeFile(imgPath + '/' + i + '.jpeg', binary, function (err, data) {
+                fs.writeFileSync(imgPath + '/' + ("0" + i).slice(-3) + '.jpeg', binary, function (err, data) {
                     if (err) {
                         console.log(err);
                     }
@@ -105,7 +104,13 @@ var videoEncode = function (uid, socket) {
                 function (error, stdout, stderr) {
                     console.log('stdout: '+(stdout||'none'));
                     console.log('stderr: '+(stderr||'none'));
-                    socket.emit('video_ok', {'data':'the origin video convet to mp4 is done.'});
+                    var data = [
+                        {
+                            'video' : 'mov/' + uid + '/' + uid + '.mp4',
+                            'uid' : uid
+                        }
+                    ];
+                    socket.emit('video_ok', {'data':data});
                 }
             )
         }
@@ -115,6 +120,7 @@ var videoEncode = function (uid, socket) {
 // 画像からgifへのエンコード
 var gifEncode = function (uid, socket) {
     var cmd = 'convert ./public/images/' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif';
+
     exec(cmd, {timeout: 5000},
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
@@ -122,7 +128,8 @@ var gifEncode = function (uid, socket) {
             var data = [
                 {
                     'origin' : 'mov/' + uid + '/' + uid + '.mp4',
-                    'gif' : 'images/' + uid + '/' + uid + '.gif'
+                    'gif' : 'images/' + uid + '/' + uid + '.gif',
+                    'uid' : uid
                 }
             ];
 
@@ -131,8 +138,6 @@ var gifEncode = function (uid, socket) {
             redisHandler.setData(data);
             console.log('end redis');
 
-            executeSync();
-
             // gif化が終わったので送信
             /*
             data = [{
@@ -140,13 +145,19 @@ var gifEncode = function (uid, socket) {
                 'gif' : gifpath
             }];
             */
+            var fuita = [
+                {
+                    'gif' : 'images/' + uid + '/' + uid + '.gif',
+                    'uid' : uid
+                }
+            ];
             console.log('send data with socket.io');
-            socket.emit('fuita', {'data' : data});
+            socket.emit('fuita', {'data' : fuita});
         }
     )
 };
 
-var executeSync = function() {
+/*var executeSync = function() {
     var cmd = 'sync';
 
     exec(cmd, {timeout: 5000},
@@ -155,7 +166,7 @@ var executeSync = function() {
             console.log('stderr: '+(stderr||'none'));
         }
         )
-};
+};*/
 
 // redisに格納。データ構造は↓みたいな感じ
 // list : [id1, id2, id3]
@@ -175,7 +186,7 @@ var redisHandler = (function() {
             return list;
         },
         setData : function(uid, data){
-            var key = String(uid),
+            var key = uid,
             value = JSON.stringify(data);
             client.set(key, value);
         },
@@ -200,34 +211,6 @@ var redisHandler = (function() {
     };
 })();
 
-/*cmd = 'ffmpeg -i ./mov/CIMG0019.avi -s 320x180 ./gif/%5d.png';
-
-cmd = 'sync'
-
-var execCommand = function (socket, gif) {
-    var socket = socket;
-    return exec(cmd, {timeout: 5000},
-        function (error, stdout, stderr) {
-            console.log('stdout: '+(stdout||'none'));
-            console.log('stderr: '+(stderr||'none'));
-            socket.emit();
-        };
-        )
-};*/
-
-/*hoge = function(socket) {
-    return exec(cmd, {timeout: 5000},
-        function(error, stdout, stderr) {
-            socket.emit('news', { hello: stderr});
-            console.log('stdout: '+(stdout||'none'));
-            console.log('stderr: '+(stderr||'none'));
-            if(error !== null) {
-                console.log('exec error: '+error);
-            }
-        }
-        )
-};*/
-
 io.sockets.on('connection', function (socket) {
 
     // dataの受け取り
@@ -243,12 +226,6 @@ io.sockets.on('connection', function (socket) {
 
         fileHandler(uid, data.frames, socket).writeFile();
 
-    });
-
-    // FEから動画の問い合わせがあった場合
-    socket.on('fuita?', function (data) {
-        console.log('receive fuita? from FE');
-        aaaa
     });
 
     // FE側との調整して仕様決定
