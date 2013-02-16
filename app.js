@@ -55,8 +55,6 @@ UniqueId.prototype = {
         return randam + '_' + time.toString();
     }
 };
-var uniqueId = new UniqueId();
-var uid = uniqueId.create();
 
 // ファイル操作
 // 受け取った画像を保存
@@ -100,7 +98,7 @@ var videoEncode = function (uid, socket) {
 
 // 画像からgifへのエンコード
 var gifEncode = function (uid, socket) {
-    var cmd = 'convert ./public/images' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif';
+    var cmd = 'convert ./public/images/' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif';
     exec(cmd, {timeout: 5000},
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
@@ -126,7 +124,7 @@ var gifEncode = function (uid, socket) {
                 'gif' : gifpath
             }];
             */
-            consoe.log('send data with socket.io');
+            console.log('send data with socket.io');
             socket.emit('fuita', {'data' : data});
         }
     )
@@ -221,11 +219,13 @@ io.sockets.on('connection', function (socket) {
     // クライアントからの接続の有無を判定する方法調査
     socket.on('fuita', function (data) {
         console.log('connect fuita');
+        console.log(data);
         
-        var uid = new UniqueId();
+        var uniqueId = new UniqueId();
+        var uid = uniqueId.create();
         console.log('create uid = ' + uid);
 
-        fileHandler(uid, data, socket).writeFile();
+        fileHandler(uid, data.frames, socket).writeFile();
 
     });
 
