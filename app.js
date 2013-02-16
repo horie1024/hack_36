@@ -29,10 +29,6 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-var function () {
-
-}
-
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
@@ -50,10 +46,8 @@ var exec = require('child_process').exec,
 cmd = '';
 
 //uniqie id作成
-var uniqueId = new UniqueId();
-var uid = uniqueId.create();
-
 var UniqueId = function() {};
+
 UniqueId.prototype = {
     create: function() {
         var randam = Math.floor(Math.random() * 1000),
@@ -62,6 +56,8 @@ UniqueId.prototype = {
         return randam + '_' + time.toString();
     }
 };
+var uniqueId = new UniqueId();
+var uid = uniqueId.create();
 
 // ファイル操作
 // 受け取った画像を保存
@@ -72,7 +68,7 @@ UniqueId.prototype = {
 var fileHandler = function (path, data, socket) {
     console.log('Start write file');
     var imgPath = './public/image/' + path,
-    data = base64.decodeStringAsUTF8(data);
+    data = new Buffer(data, 'base64');
     socket = socket;
 
     fs.mkdir(imgPath);
@@ -127,7 +123,7 @@ var gifEncode = function (uid, socket) {
             */
 
             socket.emit('fuita', {'data' : data});
-        };
+        }
     )
 };
 
@@ -138,8 +134,7 @@ var executeSync = function() {
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
-            socket.emit();
-        };
+        }
         )
 };
 
@@ -219,10 +214,10 @@ io.sockets.on('connection', function (socket) {
     // dataの受け取り
     // データを受け取ってgif化した後、クライアントからの接続が無い場合はエラー処理して、送信しない。
     // クライアントからの接続の有無を判定する方法調査
-    socket.on('aa', function (data) {
+    socket.on('fuita', function (data) {
         var uid = new UniqueId();
 
-        fileHandler(uid, data, socket).fileWrite();
+        fileHandler(uid, data, socket).writeFile();
 
     });
 
