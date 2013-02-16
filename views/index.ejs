@@ -4,6 +4,7 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="/javascripts/jquery.hoverpulse.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style type="text/css">
     <!--
@@ -25,6 +26,9 @@
       position: fixed;
       top: 100px;
       left: 250px;
+    }
+    .fuitaPicture{
+      float:left;
     }
     -->
     </style>
@@ -58,8 +62,9 @@
               for (var i = data.length - 1; i >= 0; i--) {
                 addImg(data[i]);
               };
+              $(".fuitaPicture").hoverpulse();
             }                 
-            
+             
             function fuita (data) {
               showDialog();
               console.log("fuitad:" + data);
@@ -69,8 +74,11 @@
             //gifをDOMに追加する
             function addImg (img) {
                console.log(img);
-               var picture = $('<img id="pictures" src="' + img.gif +'">');
+               var picture = $('<img class="fuitaPicture" src="' + img.gif +'">');
                target.prepend(picture);
+               picture.click(function(){
+                  console.log("clicked");
+               });
             }
 
             //吹いたダイアログ表示
@@ -86,7 +94,6 @@
                 overlay.hide();
                 dialog.hide();
               }, 1000);
-
             } 
          });
     </script>
