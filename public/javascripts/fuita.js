@@ -55,7 +55,7 @@ $(document).ready(function(){
       picture.click(function(){
          console.log(img.gif);
       });
-//     picture.filter(".pictWrap").hoverpulse();
+     picture.filter(".pictWrap").hoverpulse();
    }
 
    //吹いたダイアログ表示
