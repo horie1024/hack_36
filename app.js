@@ -66,9 +66,11 @@ var uid = uniqueId.create();
 // 画像の保存先どうするか？
 var fileHandler = function (path, data, socket) {
     console.log('Start write file');
-    var imgPath = './public/image/' + path,
+    var imgPath = './public/images/' + path,
     data = new Buffer(data, 'base64');
     socket = socket;
+
+    console.log('imgPath : ' + imgPath);
 
     fs.mkdir(imgPath);
     fs.mkdir('./public/mov');
@@ -77,12 +79,14 @@ var fileHandler = function (path, data, socket) {
         writeFile :  function() {
             //var execEncode = execEncode;
             for (var i = 0; i < data.length; i++) {
-                fs.writeFile('./' + imgPath , data[i] + '.jpeg', function (err, data) {
+                console.log('data : ' + data[i]);
+                fs.writeFile(imgPath , data[i] + '.jpeg', function (err, data) {
                     if (err) {
                         console.log(err);
                     }
                 });
             }
+            console.log('start create gif');
             gifEncode(path, socket);
         }
     };
@@ -108,8 +112,10 @@ var gifEncode = function (uid, socket) {
                 }
             ];
 
+            console.log('start redis');
             redisHandler.setList(uid);
             redisHandler.setData(data);
+            console.log('end redis');
 
             executeSync();
 
@@ -120,7 +126,7 @@ var gifEncode = function (uid, socket) {
                 'gif' : gifpath
             }];
             */
-
+            consoe.log('send data with socket.io');
             socket.emit('fuita', {'data' : data});
         }
     )
@@ -214,7 +220,10 @@ io.sockets.on('connection', function (socket) {
     // データを受け取ってgif化した後、クライアントからの接続が無い場合はエラー処理して、送信しない。
     // クライアントからの接続の有無を判定する方法調査
     socket.on('fuita', function (data) {
+        console.log('connect fuita');
+        
         var uid = new UniqueId();
+        console.log('create uid = ' + uid);
 
         fileHandler(uid, data, socket).writeFile();
 
