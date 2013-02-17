@@ -108,7 +108,8 @@ var videoEncode = function (uid, socket) {
                     'uid' : uid
                 }
             ];
-            socket.emit('video_ok', {'data':data});
+
+            io.sockets.emit('video_ok', {'data':data});
             var cmd = 'python youtube_upload.py ../public/mov/' + uid + '/'+ uid +'.mp4';
             exec(cmd, {timeout : 10000}, function (error, stdout, stderr) {
                 console.log('stdout: '+(stdout||'none'));
@@ -151,7 +152,7 @@ var gifEncode = function (uid, socket) {
                 }
             ];
             console.log('send data with socket.io');
-            socket.emit('fuita', {'data' : fuita});
+            io.sockets.emit('fuita', {'data' : fuita});
         }
     )
 };
@@ -201,7 +202,7 @@ var redisHandler = (function() {
                 if (err) {
                     console.log('redis set data err');
                 }
-                if (typeof obj !== undefined) {
+                if (typeof obj !== "undefined") {
                     obj = obj.map(function(x) {return JSON.parse(x)});
                 }
                 callback(obj);
