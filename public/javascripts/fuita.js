@@ -27,7 +27,7 @@ $(document).ready(function(){
  //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
-      addMovie(data[0]);
+      addMovie(data);
   });
 
   function init (data) {
