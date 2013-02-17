@@ -76,7 +76,8 @@ $(document).ready(function(){
    //gifをDOMに追加する
   function addImg (img) {
     var picture = $('<div class="pictWrap" id="fuita_'
-      + img.uid +'"><img src="'+ img.gif +'" width="306" height="172"> </div>');
+      + img.uid +'"><img src="'
+      + img.gif +'" width="306" height="172"> </div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
