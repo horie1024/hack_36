@@ -99,6 +99,9 @@ html, body, #wrapper {
   border: solid 1px #5A4D3C;
   -webkit-box-shadow: 0 0 0 6px #D5B07B, 0 2px 3px 7px rgba(0, 0, 0, 0.5);
 }
+.pictWrap img:hover {
+  opacity:0.5;
+}
 /*----------dialog----------*/
 #dialog-overlay {
   display:none;
@@ -136,6 +139,23 @@ html, body, #wrapper {
   padding-bottom: 8px;
   font-size: 34px;
   font-weight: bold;
+}
+
+/*------original video------*/
+.videoWrap {
+  display:none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 370px;
+  box-sizing: border-box;
+  padding: 100px 70px 90px;
+  margin: -175px 0 0 -300px;
+  text-align: center;
+  background: #fff;
+  z-index: 999;
+  font-family:antiqueplus;
 }
 /*---------- debug ----------*/
 #debug {

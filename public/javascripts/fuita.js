@@ -1,3 +1,4 @@
+var test;
 $(document).ready(function(){
   var socket = io.connect('http://www2309uf.sakura.ne.jp/');
   var target = $("#wrapper");
@@ -6,13 +7,15 @@ $(document).ready(function(){
 
   socket.on('init', function (data) {
     init(data.data);
-    $(".pictWrap img").hoverpulse();
+    //$(".pictWrap img").hoverpulse();
+    test = data.data;
   }); 
 
   socket.on('fuita', function (data) {
     fuita(data.data);
-    $(".pictWrap img").hoverpulse();
+    //$(".pictWrap img").hoverpulse({zIndexActive:10});
   });  
+
 
   socket.on('video_ok', function(data) {
     video_ok(data.data);
@@ -24,12 +27,12 @@ $(document).ready(function(){
 //    $(".pictWrap pict").hoverpulse();
   });
   $("#fuita").click(function () {
-    fuita(data);
+    fuita(test);
  //   $(".pictWrap img").hoverpulse();
  //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
-    video_ok(data);
+    video_ok(test);
   });
 
   function init (data) {
@@ -50,7 +53,7 @@ $(document).ready(function(){
   }
 
   function video_ok (data) {
-      addMovie(data[0]);
+      addMovie(data[data.length - 1]);
   }
 
   function removeFirstImage() {
@@ -72,7 +75,6 @@ $(document).ready(function(){
 
    //gifをDOMに追加する
   function addImg (img) {
-    console.log(img);
     var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'+ img.gif +'" width="306" height="172"> </div>');
     target.prepend(picture);
@@ -82,8 +84,9 @@ $(document).ready(function(){
       var video_id = "#origin_" + img.uid;
       console.log(video_id);
       if ($(video_id).size() > 0) {
-        $(video_id).show();
+        console.log("add video");
         overlay.show();
+        $(video_id).show();
         overlay.click(function () {
           $(video_id).hide();
           overlay.hide();
