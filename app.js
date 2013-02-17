@@ -161,6 +161,7 @@ var gifEncode = function (uid, socket) {
             // gif化が終わったので送信
             var fuita = [
                 {
+                    'origin' : 'mov/' + uid + '/' + uid + '.mp4',
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
                     'uid' : uid
                 }
