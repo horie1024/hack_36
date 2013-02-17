@@ -18,7 +18,7 @@ $(document).ready(function(){
 
   socket.on('post_facebook', function (data) {
     console.log('post facebook start.');
-    FUITA.postFB(data.url);
+    FUITA.postFacebook(data.url);
   });
 
   socket.on('video_ok', function(data) {
