@@ -97,7 +97,7 @@ var videoEncode = function (uid, socket) {
     console.log('start videoEncode');
     //var cmd = 'ffmpeg -i ' + './public/images/' + uid + '/%d.jpeg ./public/mov/' + uid + '/' + uid + '.avi';
     var cmd = 'sync;ffmpeg -r 10 -i ' + './public/images/' + uid + '/%02d.jpeg ./public/mov/' + uid + '/' + uid + '.mp4';
-    exec(cmd, {timeout: 5000},
+    exec(cmd, {timeout: 10000},
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
@@ -109,8 +109,11 @@ var videoEncode = function (uid, socket) {
                 }
             ];
             socket.emit('video_ok', {'data':data});
-
-
+            var cmd = 'python youtube_upload.py ../public/mov/' + uid + '/'+ uid +'.mp4';
+            exec(cmd, {timeout : 10000}, function (error, stdout, stderr) {
+                console.log('stdout: '+(stdout||'none'));
+                console.log('stderr: '+(stderr||'none'));
+            });
         }
     )
 };
@@ -124,7 +127,7 @@ var gifEncode = function (uid, socket) {
     //var cmd = 'sync;convert ./public/images/' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif'
     var cmd = 'sync;convert ' + inputFiles + ' -resize 37% -crop 236x133+0+22 +repage  ./public/images/' + uid + '/' + uid + '.gif';
 
-    exec(cmd, {timeout: 5000},
+    exec(cmd, {timeout: 10000},
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
