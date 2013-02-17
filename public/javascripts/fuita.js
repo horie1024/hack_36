@@ -57,7 +57,8 @@ $(document).ready(function(){
   }
 
   function video_ok (data) {
-      addMovie(data[data.length - 1]);
+    console.log("video_ok:");
+    addMovie(data[0]);
   }
 
   function removeFirstImage() {
@@ -68,7 +69,6 @@ $(document).ready(function(){
     }
   }
   function addMovie (data) {
-    console.log("video_ok:");
     console.log(data);
     var id = "#fuita_" + data.uid;
     console.log("movie:" + id);
@@ -80,7 +80,8 @@ $(document).ready(function(){
    //gifをDOMに追加する
   function addImg (img) {
     var picture = $('<div class="pictWrap" id="fuita_'
-      + img.uid +'"><img src="'+ img.gif +'" width="306" height="172"> </div>');
+      + img.uid +'"><img src="'
+      + img.gif +'" width="306" height="172"> </div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
