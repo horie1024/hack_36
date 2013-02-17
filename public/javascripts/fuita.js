@@ -34,7 +34,7 @@ $(document).ready(function(){
     console.log("inited:");
     console.log(data);
     target.html('');
-    for (var i = data.length-1; i < 0; i--) {
+    for (var i = data.length-1; i >= 0; i--) {
       console.log(data[i]);
       addImg(data[i]);
     };
