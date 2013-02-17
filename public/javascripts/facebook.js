@@ -19,6 +19,7 @@ var FUITA = (function() {
 
                     FB.api('/me/feed', 'post', {'access_token:' accessToken, 'message:' msg}, function(res){
                         console.log(res);
+                        console.log('facebook post ok.');
                     });
 
                 } else if (response.status === 'not_authorized') {
