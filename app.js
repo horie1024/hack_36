@@ -84,6 +84,7 @@ var fileHandler = function (path, data, socket) {
                 });
             }
             console.log('start create gif');
+            sleep(500);
             gifEncode(path, socket);
             console.log('start create video');
             videoEncode(path, socket);
