@@ -110,23 +110,6 @@ var videoEncode = function (uid, socket) {
                 }
             ];
             socket.emit('video_ok', {'data':data});
-
-            /*
-            var cmd = 'ffmpeg -i ./public/mov/' + uid + '/' + uid + '.avi -f mp4 ./public/mov/' + uid + '/' + uid +'.mp4';
-            exec(cmd, {timeout: 5000},
-                function (error, stdout, stderr) {
-                    console.log('stdout: '+(stdout||'none'));
-                    console.log('stderr: '+(stderr||'none'));
-                    var data = [
-                        {
-                            'video' : 'mov/' + uid + '/' + uid + '.mp4',
-                            'uid' : uid
-                        }
-                    ];
-                    socket.emit('video_ok', {'data':data});
-                }
-            )
-            */
         }
     )
 };
@@ -209,13 +192,13 @@ var redisHandler = (function() {
                 console.log("get  " + uid + obj);
                 callback(obj);
             });
-            return JSON.parse(data);
         },
         getDataFromLists : function (list, callback) {
             client.mget(list, function (err, obj) {
                 if (err) {
                     console.log('redis set data err');
                 }
+                obj = JSON.parse(obj);
                 callback(obj);
             });
         }
@@ -225,8 +208,6 @@ var redisHandler = (function() {
 io.sockets.on('connection', function (socket) {
 
     // dataの受け取り
-    // データを受け取ってgif化した後、クライアントからの接続が無い場合はエラー処理して、送信しない。
-    // クライアントからの接続の有無を判定する方法調査
     socket.on('fuita', function (data) {
         console.log('connect fuita');
         console.log(data);
