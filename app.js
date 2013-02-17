@@ -174,13 +174,13 @@ var redisHandler = (function() {
             return list;
         },
         setData : function(key, data){
-            var value = JSON.stringify(data, function (err, obj) {
+            var value = JSON.stringify(data);
+            client.set(key, value,  function (err, obj) {
                 if (err) {
                     console.log('redis set data err');
                 }
                 console.log('redis set data ok.');
             });
-            client.set(key, value);
         },
         getData : function (uid, callback) {
             client.get(uid, function(err, obj) {
