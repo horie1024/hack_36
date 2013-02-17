@@ -135,17 +135,11 @@ var gifEncode = function (uid, socket) {
             ];
 
             console.log('start redis');
-            redisHandler.setList(uid);
-            redisHandler.setData(data);
+            redisHandler.setList('uidList', uid);
+            redisHandler.setData(uid, data);
             console.log('end redis');
 
             // gif化が終わったので送信
-            /*
-            data = [{
-                'orogin' : originpath,
-                'gif' : gifpath
-            }];
-            */
             var fuita = [
                 {
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
@@ -158,56 +152,54 @@ var gifEncode = function (uid, socket) {
     )
 };
 
-/*var executeSync = function() {
-    var cmd = 'sync';
-
-    exec(cmd, {timeout: 5000},
-        function (error, stdout, stderr) {
-            console.log('stdout: '+(stdout||'none'));
-            console.log('stderr: '+(stderr||'none'));
-        }
-        )
-};*/
-
 // redisに格納。データ構造は↓みたいな感じ
 // list : [id1, id2, id3]
 // id : {originPath, gifPath}
 // redisのデータを操作する関数
 var redisHandler = (function() {
     return {
-        setList : function (uid) {
+        setList : function (key, uid) {
             var value = JSON.stringify(uid);
-            client.lpush("uidList", value);
+            client.lpush(key, value);
         },
-        getList : function () {
-            var  list = client.lrange("uidList", 0, 35, function(err, obj) {
+        getList : function (key, callback) {
+            var  list = client.lrange(key, 0, 35, function(err, obj) {
+                if (err) {
+                    console.log('redis set data err');
+                }
                 console.log("get list uidList: " + obj);
-                return obj;
+                obj = obj.map(function(x) {return JSON.parse(x);});
+                callback(obj);
             });
             return list;
         },
-        setData : function(uid, data){
-            var key = uid,
-            value = JSON.stringify(data);
+        setData : function(key, data){
+            var value = JSON.stringify(data, function (err, obj) {
+                if (err) {
+                    console.log('redis set data err');
+                }
+                console.log('redis set data ok.');
+            });
             client.set(key, value);
         },
-        getData : function (uid) {
-            var data = client.get(uid, function(err, obj) {
+        getData : function (uid, callback) {
+            client.get(uid, function(err, obj) {
+                if (err) {
+                    console.log('redis set data err');
+                }
+                obj = JSON.parse(obj);
                 console.log("get  " + uid + obj);
-                return obj;
+                callback(obj);
             });
             return JSON.parse(data);
         },
-        getDataFromLists : function (list) {
-            var data = [];
-            for (var i = 0; i < list.length; i++) {
-                var value = client.get(list[i], function(err, obj){
-                    return obj;
-                });
-                value = JSON.parse(value);
-                data.push(value);
-            };
-            return data;
+        getDataFromLists : function (list, callback) {
+            client.mget(list, function (err, obj) {
+                if (err) {
+                    console.log('redis set data err');
+                }
+                callback(obj);
+            });
         }
     };
 })();
@@ -236,12 +228,11 @@ io.sockets.on('connection', function (socket) {
                     {data2},
                     {data3},
                     ・
-                    ・
-                    ・
                     ]
     */
-    var list = redisHandler.getList(),
-    data = redisHandler.getDataFromLists(list);
-
-    socket.emit('init', {'data': data});
+    redisHandler.getList('uidList', function(dataListObj){
+        redisHandler.getDataFromLists(dataListObj, function(dataObj){
+            socket.emit('init', {'data': dataObj});
+        });
+    });
 });
