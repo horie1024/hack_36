@@ -110,7 +110,8 @@ var videoEncode = function (uid, socket) {
             ];
 
             io.sockets.emit('video_ok', {'data':data});
-            var cmd = 'python youtube_upload.py ../public/mov/' + uid + '/'+ uid +'.mp4';
+            var cmd = 'bin/youtube_upload.py public/mov/' + uid + '/'+ uid +'.mp4 ' + uid;
+            console.log(cmd);
             exec(cmd, {timeout : 30000}, function (error, stdout, stderr) {
                 console.log('error:' + error);
                 console.log('stdout: '+(stdout||'none'));
