@@ -140,7 +140,7 @@ var gifEncode = function (uid, socket) {
         inputFiles += "./public/images/" + uid + "/" + ("0" + i).slice(-2) + ".jpeg ";
     }
     //var cmd = 'sync;convert ./public/images/' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif'
-    var cmd = 'sync;convert ' + inputFiles + ' -resize 37% -crop 236x133+0+22 +repage  ./public/images/' + uid + '/' + uid + '.gif';
+    var cmd = 'sync;convert -delay 20 ' + inputFiles + ' -resize 37% -crop 236x133+0+22 +repage  ./public/images/' + uid + '/' + uid + '.gif';
 
     exec(cmd, {timeout: 10000},
         function (error, stdout, stderr) {
@@ -161,6 +161,7 @@ var gifEncode = function (uid, socket) {
             // gif化が終わったので送信
             var fuita = [
                 {
+                    'origin' : 'mov/' + uid + '/' + uid + '.mp4',
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
                     'uid' : uid
                 }
