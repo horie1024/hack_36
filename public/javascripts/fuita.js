@@ -41,8 +41,9 @@ $(document).ready(function(){
   }                 
 
   function fuita (data) {
+    console.log("fuitad:");
+    console.log(data);
     showDialog();
-    console.log("fuitad:" + data);
     removeFirstImage();
     addImg(data[0]);
   }
@@ -55,6 +56,8 @@ $(document).ready(function(){
     }
   }
   function addMovie (data) {
+    console.log("video_ok:");
+    console.log(data);
     var id = "#fuita_" + data.uid;
     console.log("movie:" + id);
     $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
