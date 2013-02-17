@@ -10,6 +10,7 @@ var express = require('express')
   , path = require('path')
   , fs = require('fs')
   , redis = require("redis")
+  , xml2js = require('xml2js')
   , parseString = require('xml2js').parseString
   , client = redis.createClient();
 
@@ -114,12 +115,17 @@ var videoEncode = function (uid, socket) {
             var cmd = 'bin/youtube_upload.py public/mov/' + uid + '/'+ uid +'.mp4 ' + uid;
             console.log(cmd);
             exec(cmd, {timeout : 30000}, function (error, stdout, stderr) {
-                parseString(stdout, function (err, result) {
+                console.log('error:' + error);
+                console.log('stdout: '+(stdout||'none'));
+                console.log('stderr: '+(stderr||'none'));
+                var parser = new xml2js.Parser();
+                parser.parseString(stdout, function (err, result) {
                     if (err) {
                         console.log('parse xml error at line 121 : ' + err);
                     }
-                    console.log('youtube url = ' + result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']);
-                    var url = result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']; 
+                    //console.log('youtube url = ' + result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']);
+                    console.log(result);
+                    var url = result['ns0:entry']['ns1:group'][0]['ns1:player'][0]['$']['url']; 
                     io.sockets.emit('post_facebook', {'url':url});
                 });
             });
