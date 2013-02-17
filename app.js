@@ -108,7 +108,7 @@ var videoEncode = function (uid, socket) {
                     'uid' : uid
                 }
             ];
-            socket.emit('video_ok', {'data':data});
+            io.sockets.emit('video_ok', {'data':data});
 
 
         }
@@ -148,7 +148,7 @@ var gifEncode = function (uid, socket) {
                 }
             ];
             console.log('send data with socket.io');
-            socket.emit('fuita', {'data' : fuita});
+            io.sockets.emit('fuita', {'data' : fuita});
         }
     )
 };
