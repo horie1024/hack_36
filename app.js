@@ -77,7 +77,7 @@ var fileHandler = function (path, data, socket) {
             for (var i = 0; i < data.length; i++) {
                 var binary = new Buffer(data[i], 'base64');
                 //console.log('data : ' + data[i]);
-                fs.writeFileSync(imgPath + '/' + ("0" + i).slice(-3) + '.jpeg', binary, function (err, data) {
+                fs.writeFileSync(imgPath + '/' + ("0" + i).slice(-2) + '.jpeg', binary, function (err, data) {
                     if (err) {
                         console.log(err);
                     }
@@ -94,12 +94,21 @@ var fileHandler = function (path, data, socket) {
 // 画像から動画へのエンコード
 var videoEncode = function (uid, socket) {
     console.log('start videoEncode');
-    var cmd = 'ffmpeg -i ' + './public/images/' + uid + '/%d.jpeg ./public/mov/' + uid + '/' + uid + '.avi';
+    //var cmd = 'ffmpeg -i ' + './public/images/' + uid + '/%d.jpeg ./public/mov/' + uid + '/' + uid + '.avi';
+    var cmd = 'ffmpeg -r 10 -i ' + './public/images/' + uid + '/%02d.jpeg ./public/mov/' + uid + '/' + uid + '.mp4';
     exec(cmd, {timeout: 5000},
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
 
+            var data = [
+                {
+                    'video' : 'mov/' + uid + '/' + uid + '.mp4',
+                    'uid' : uid
+                }
+            ];
+            socket.emit('video_ok', {'data':data});
+            /*
             var cmd = 'ffmpeg -i ./public/mov/' + uid + '/' + uid + '.avi -f mp4 ./public/mov/' + uid + '/' + uid +'.mp4';
             exec(cmd, {timeout: 5000},
                 function (error, stdout, stderr) {
@@ -114,6 +123,7 @@ var videoEncode = function (uid, socket) {
                     socket.emit('video_ok', {'data':data});
                 }
             )
+            */
         }
     )
 };
