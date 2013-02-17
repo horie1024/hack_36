@@ -9,6 +9,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , fs = require('fs')
+  , youtube = require('youtube')
   , redis = require("redis")
   , client = redis.createClient();
 
@@ -109,6 +110,25 @@ var videoEncode = function (uid, socket) {
                 }
             ];
             socket.emit('video_ok', {'data':data});
+            
+            youtube
+            .createUpload('/public/mov/' + uid + '/' + uid + '.mp4')
+            .user('kabutomushi.hd')
+            .source('fuita')
+            .password('kabutomushi')
+            .key('AI39si7VFvglYKc-6oY1jHZSO9lLhPm44cGwMNC19b5_0ABP2enhCZJ36vjwDR7W0l5IsM5YwA6bfoUsQdwC9EHVVg85H2jDIA')
+            .title('FUITA!')
+            .description('This is fuita.')
+            .category('Education')
+            .upload(function(err, res){
+              if (err) throw err;
+              console.log('done');
+              console.log(res.id);
+              console.log(res.url);
+              console.log(res.embed());
+              console.log(res.embed(320, 320));
+              console.log(require('util').inspect(res, false, 15, true));
+          });
             /*
             var cmd = 'ffmpeg -i ./public/mov/' + uid + '/' + uid + '.avi -f mp4 ./public/mov/' + uid + '/' + uid +'.mp4';
             exec(cmd, {timeout: 5000},
