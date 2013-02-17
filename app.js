@@ -128,13 +128,12 @@ var gifEncode = function (uid, socket) {
         function (error, stdout, stderr) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
-            var data = [
+            var data = 
                 {
                     'origin' : 'mov/' + uid + '/' + uid + '.mp4',
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
                     'uid' : uid
-                }
-            ];
+                };
 
             console.log('start redis');
             redisHandler.setList('uidList', uid);
