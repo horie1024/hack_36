@@ -12,8 +12,12 @@ $(document).ready(function(){
     fuita(data.data);
   });  
 
-  socket.on('video_ok', function(data) {
-    addMovie(data.data) ;
+  socket.on('video_ok', function (data) {
+    addMovie(data.data);
+  });
+
+  socket.on('post_facebook', function (data){
+    FUITA.postFB(data.url);
   });
 
   $("#init").click(function () {

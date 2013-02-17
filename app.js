@@ -10,6 +10,7 @@ var express = require('express')
   , path = require('path')
   , fs = require('fs')
   , redis = require("redis")
+  , parseString = require('xml2js').parseString
   , client = redis.createClient();
 
 var app = express();
@@ -115,6 +116,14 @@ var videoEncode = function (uid, socket) {
                 console.log('error:' + error);
                 console.log('stdout: '+(stdout||'none'));
                 console.log('stderr: '+(stderr||'none'));
+                parseString(stdout, function (err, result) {
+                    if (err) {
+                        console.log('parse xml error at line 121 : ' + err);
+                    }
+                    console.log('youtube url = ' + result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']);
+                    var url = result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']; 
+                    io.sockets.emit('post_facebook', {'url':url});
+                });
             });
         }
     )
