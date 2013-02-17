@@ -5,8 +5,6 @@ $(document).ready(function(){
   //stub
   var data = [{"id":"1", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/b/1/b122bfe5.gif" }, {"id":"2", "origin":"http://yahoo.co.jp", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/1/c/1cc43e81.gif" }]
 
-
-
   socket.on('init', function (data) {
     init(data);
   }); 
@@ -52,7 +50,6 @@ $(document).ready(function(){
       $(".pictWrap:last").remove();
     }
   }
-
   function addMovie (data) {
     var id = "#fuita_" + data.id;
     console.log("movie:" + id);
