@@ -198,7 +198,9 @@ var redisHandler = (function() {
                 if (err) {
                     console.log('redis set data err');
                 }
-                obj = obj.map(function(x) {return JSON.parse(x)});
+                if (typeof obj !== undefined) {
+                    obj = obj.map(function(x) {return JSON.parse(x)});
+                }
                 callback(obj);
             });
         }
