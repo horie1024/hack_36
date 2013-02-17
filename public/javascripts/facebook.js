@@ -15,8 +15,9 @@ ref.parentNode.insertBefore(js, ref);
 
     return {
     postFacebook : function(msg) {
-        window.fbAsyncInit = function() {
+        //window.fbAsyncInit = function() {
             // init the FB JS SDK
+            console.log('init facebook sdk start');
             FB.init({
                 appId      : '143724395789427', // App ID from the App Dashboard
                 channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', // Channel File for x-domain communication
@@ -47,7 +48,7 @@ ref.parentNode.insertBefore(js, ref);
                     // the user isn't logged in to Facebook.
                 }
             });
-        }
+        //}
 
     }
     }
