@@ -1,4 +1,5 @@
 var test;
+var youtubeURL;
 $(document).ready(function(){
   var socket = io.connect('http://www2309uf.sakura.ne.jp/');
   var target = $("#wrapper");
@@ -73,8 +74,8 @@ $(document).ready(function(){
     var id = "#fuita_" + data.uid;
     console.log("movie:" + id);
     $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
-      + '" style="display:none"><video src="'+ data.origin 
-      +'" loop preload="auto" autoplay="true"></video></div>');
+      + '" style="display:none"><a href="'+ data.url 
+      +'" target="_blank" ></a></div>');
     console.log(data);
   }
 
@@ -83,26 +84,8 @@ $(document).ready(function(){
     var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'
       + img.gif +'" width="306" height="172">'
-      + '<div class="videoWrap"  id="origin_' + img.uid
-      + '" style="display:none"><video src="'+ img.origin
-      +'" loop preload="auto" autoplay="true"></video></div>'
       + '</div>');
     target.prepend(picture);
-    picture.click(function(){
-      console.log(img.gif);
-      //クリックで元動画再生
-      var video_id = "#origin_" + img.uid;
-      console.log(video_id);
-      if ($(video_id).size() > 0) {
-        console.log("add video");
-        overlay.show();
-        $(video_id).show();
-        overlay.click(function () {
-          $(video_id).hide();
-          overlay.hide();
-        });
-      }
-    });
   }
 
   //吹いたダイアログ表示
