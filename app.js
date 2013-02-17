@@ -243,7 +243,7 @@ io.sockets.on('connection', function (socket) {
     */
     console.log('init start.');
     redisHandler.getList('uidList', function(dataListObj){
-        console.log('get list'.);
+        console.log('get list');
         redisHandler.getDataFromLists(dataListObj, function(dataObj){
             console.log('send data to FE');
             socket.emit('init', {'data': dataObj});
