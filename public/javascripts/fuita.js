@@ -13,7 +13,7 @@ $(document).ready(function(){
   });  
 
   socket.on('video_ok', function(data) {
-    addMovie(data.data) ;
+    video_ok(data.data);
   });
 
   $("#init").click(function () {
@@ -27,7 +27,7 @@ $(document).ready(function(){
  //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
-      addMovie(data);
+    video_ok(data);
   });
 
   function init (data) {
@@ -46,6 +46,10 @@ $(document).ready(function(){
     showDialog();
     removeFirstImage();
     addImg(data[0]);
+  }
+
+  function video_ok (data) {
+      addMovie(data[0]);
   }
 
   function removeFirstImage() {
@@ -68,7 +72,8 @@ $(document).ready(function(){
    //gifをDOMに追加する
   function addImg (img) {
     console.log(img);
-    var picture = $('<div class="pictWrap" id="fuita_'+ img.uid +'"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
+    var picture = $('<div class="pictWrap" id="fuita_'
+      + img.uid +'"><img src="'+ img.gif +'" width="306" height="172"> </div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
