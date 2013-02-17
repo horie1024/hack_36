@@ -84,8 +84,8 @@ var fileHandler = function (path, data, socket) {
                 });
             }
             console.log('start create gif');
-            sleep(500);
-            gifEncode(path, socket);
+            setTimeout(function() { gifEncode(path, socket)}, 500);
+            //gifEncode(path, socket);
             console.log('start create video');
             videoEncode(path, socket);
         }
@@ -243,7 +243,6 @@ io.sockets.on('connection', function (socket) {
     */
     console.log('init start.');
     redisHandler.getList('uidList', function(dataListObj){
-        console.log('get list');
         redisHandler.getDataFromLists(dataListObj, function(dataObj){
             console.log('send data to FE');
             socket.emit('init', {'data': dataObj});
