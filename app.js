@@ -114,9 +114,6 @@ var videoEncode = function (uid, socket) {
             var cmd = 'bin/youtube_upload.py public/mov/' + uid + '/'+ uid +'.mp4 ' + uid;
             console.log(cmd);
             exec(cmd, {timeout : 30000}, function (error, stdout, stderr) {
-                console.log('error:' + error);
-                console.log('stdout: '+(stdout||'none'));
-                console.log('stderr: '+(stderr||'none'));
                 parseString(stdout, function (err, result) {
                     if (err) {
                         console.log('parse xml error at line 121 : ' + err);
@@ -227,7 +224,6 @@ io.sockets.on('connection', function (socket) {
     // dataの受け取り
     socket.on('fuita', function (data) {
         console.log('connect fuita');
-        console.log(data);
         
         var uniqueId = new UniqueId();
         var uid = uniqueId.create();
