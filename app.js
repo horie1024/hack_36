@@ -9,7 +9,6 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , fs = require('fs')
-  , youtube = require('youtube')
   , redis = require("redis")
   , client = redis.createClient();
 
@@ -110,6 +109,8 @@ var videoEncode = function (uid, socket) {
                 }
             ];
             socket.emit('video_ok', {'data':data});
+
+
         }
     )
 };
