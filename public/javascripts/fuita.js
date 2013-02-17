@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var socket = io.connect('http://localhost');
+  var socket = io.connect('http://www2309uf.sakura.ne.jp/');
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
   var dialog = $("#dialog");
@@ -20,10 +20,14 @@ $(document).ready(function(){
   });
 
   $("#init").click(function () {
-      init(data);
+    init(data);
+//    $(".pictWrap img").hoverpulse();
+//    $(".pictWrap pict").hoverpulse();
   });
   $("#fuita").click(function () {
-      fuita(data);
+    fuita(data);
+ //   $(".pictWrap img").hoverpulse();
+ //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
       addMovie(data[0]);
@@ -79,7 +83,6 @@ $(document).ready(function(){
         });
       }
     });
-    //picture.filter(".pictWrap").hoverpulse();
   }
 
   //吹いたダイアログ表示
