@@ -1,3 +1,4 @@
+var test;
 $(document).ready(function(){
   var socket = io.connect('http://www2309uf.sakura.ne.jp/');
   var target = $("#wrapper");
@@ -6,18 +7,21 @@ $(document).ready(function(){
 
   socket.on('init', function (data) {
     init(data.data);
+    //$(".pictWrap img").hoverpulse();
+    test = data.data;
   }); 
 
   socket.on('fuita', function (data) {
     fuita(data.data);
+    //$(".pictWrap img").hoverpulse({zIndexActive:10});
   });  
 
-  socket.on('video_ok', function (data) {
-    addMovie(data.data);
+  socket.on('post_facebook', function (data) {
+    FUITA.postFB(data.url);
   });
 
-  socket.on('post_facebook', function (data){
-    FUITA.postFB(data.url);
+  socket.on('video_ok', function(data) {
+    video_ok(data.data);
   });
 
   $("#init").click(function () {
@@ -26,12 +30,12 @@ $(document).ready(function(){
 //    $(".pictWrap pict").hoverpulse();
   });
   $("#fuita").click(function () {
-    fuita(data);
+    fuita(test);
  //   $(".pictWrap img").hoverpulse();
  //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
-      addMovie(data[0]);
+    video_ok(test);
   });
 
   function init (data) {
@@ -39,7 +43,6 @@ $(document).ready(function(){
     console.log(data);
     target.html('');
     for (var i = data.length-1; i >= 0; i--) {
-      console.log(data[i]);
       addImg(data[i]);
     };
   }                 
@@ -50,6 +53,10 @@ $(document).ready(function(){
     showDialog();
     removeFirstImage();
     addImg(data[0]);
+  }
+
+  function video_ok (data) {
+      addMovie(data[data.length - 1]);
   }
 
   function removeFirstImage() {
@@ -71,8 +78,8 @@ $(document).ready(function(){
 
    //gifをDOMに追加する
   function addImg (img) {
-    console.log(img);
-    var picture = $('<div class="pictWrap" id="fuita_'+ img.uid +'"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
+    var picture = $('<div class="pictWrap" id="fuita_'
+      + img.uid +'"><img src="'+ img.gif +'" width="306" height="172"> </div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
@@ -80,8 +87,9 @@ $(document).ready(function(){
       var video_id = "#origin_" + img.uid;
       console.log(video_id);
       if ($(video_id).size() > 0) {
-        $(video_id).show();
+        console.log("add video");
         overlay.show();
+        $(video_id).show();
         overlay.click(function () {
           $(video_id).hide();
           overlay.hide();

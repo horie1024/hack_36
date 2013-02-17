@@ -1,5 +1,5 @@
 @charset "UTF-8";
-z/* html5doctor.com Reset v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/) - http://cssreset.com */
+/* html5doctor.com Reset v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/) - http://cssreset.com */
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
   margin:0;
   padding:0;
@@ -70,42 +70,75 @@ img {
   padding:0;
 }
 /*---------- main -----------*/
+@font-face {
+ font-family:antiqueplus;
+ src:url("../fonts/GL-AntiquePlus.ttf") format("truetype")
+}
 body {
-  background: url(../img/bg.jpg);
+  margin: 0 auto;
+  background: url(../images/styles/bg.jpg);
 }
 html, body, #wrapper {
   width: 100%;
   height: 100%;
 }
 #wrapper {
-  margin: 0 auto;
 }
 .pictWrap {
+  position:relative;
   float: left;
-  width: 16.3%;
-  height: 16.3%;
+  width: 16.6%;
+  height: 16.6%;
 }
-.pictWrap .pict {
-  position: relative;
-  width: 98%;
-  height: 98%;
-  margin: 5% 8%;
-  border-top: solid 1px #c4bca7;
-  border-right: solid 1px rgb(51, 21, 12);
-  border-bottom: solid 1px rgb(51, 21, 12);
-  -webkit-box-shadow: 1px 1px 0 5px #8e652d inset, 1px 1px 0 7px #775423 inset;
-  /*padding: 18px 33px 20px 32px;*/
-  box-sizing: border-box;
-  background: -webkit-gradient(linear, left top, left bottom, from(#c4bca7), color-stop(0.5, #c4bca7), to(#c4bca7));
-  background: #EBE4D4;
-  background: url(../img/pict-bg.jpg);
-  text-align: center;
-}
-.pictWrap .pict img {
+.pictWrap img {
   position: absolute;
   top: 50%;
-  margin-top: -70px;
-  margin-left: -121px;
-  border: solid 4px #8e652d;
-  -webkit-box-shadow: 1px 1px 0 2px #775423;
+  left: 50%;
+  margin-top: -85px;
+  margin-left: -153px;
+  border: solid 1px #5A4D3C;
+  -webkit-box-shadow: 0 0 0 6px #A88149, 0 2px 3px 7px rgba(0, 0, 0, 0.5);
+}
+/*----------dialog----------*/
+#dialog-overlay {
+  display:none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  opacity: 0.6;
+  background: black;
+  z-index: 99;
+}
+#dialog {
+  display:none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 370px;
+  box-sizing: border-box;
+  padding: 100px 70px 90px;
+  margin: -175px 0 0 -300px;
+  text-align: center;
+  background: #fff url(../images/styles/dialogbox.jpg) no-repeat;
+  z-index: 999;
+  font-family:antiqueplus;
+}
+#dialog .title {
+  margin-bottom: 40px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #715c1f;
+}
+#dialog .textBody {
+  padding-bottom: 8px;
+  font-size: 34px;
+  font-weight: bold;
+}
+/*---------- debug ----------*/
+#debug {
+  position:fixed;
+  z-index:9999;
 }
