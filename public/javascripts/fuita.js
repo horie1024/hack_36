@@ -36,7 +36,7 @@ $(document).ready(function(){
  //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
-    video_ok(test);
+    //video_ok(test);
   });
 
   function init (data) {
@@ -75,13 +75,18 @@ $(document).ready(function(){
     $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
       + '" style="display:none"><video src="'+ data.origin 
       +'" loop preload="auto" autoplay="true"></video></div>');
+    console.log(data);
   }
 
    //gifをDOMに追加する
   function addImg (img) {
     var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'
-      + img.gif +'" width="306" height="172"> </div>');
+      + img.gif +'" width="306" height="172">'
+      + '<div class="videoWrap"  id="origin_' + img.uid
+      + '" style="display:none"><video src="'+ img.origin
+      +'" loop preload="auto" autoplay="true"></video></div>'
+      + '</div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
