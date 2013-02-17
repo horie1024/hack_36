@@ -6,10 +6,12 @@ $(document).ready(function(){
 
   socket.on('init', function (data) {
     init(data.data);
+    $(".pictWrap img").hoverpulse();
   }); 
 
   socket.on('fuita', function (data) {
     fuita(data.data);
+    $(".pictWrap img").hoverpulse();
   });  
 
   socket.on('video_ok', function(data) {
@@ -35,7 +37,6 @@ $(document).ready(function(){
     console.log(data);
     target.html('');
     for (var i = data.length-1; i >= 0; i--) {
-      console.log(data[i]);
       addImg(data[i]);
     };
   }                 
