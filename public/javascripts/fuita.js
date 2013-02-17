@@ -1,29 +1,30 @@
 $(document).ready(function(){
-  var socket = io.connect('http://localhost');
+  var socket = io.connect('http://www2309uf.sakura.ne.jp/');
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
   var dialog = $("#dialog");
 
-  //stub
-  var data = [{"id":"1", "origin":"http://i.gifboom.com/medias/875e3db030c444d092899d4e266c9e5b.mp4", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/b/1/b122bfe5.gif" }, {"id":"2", "origin":"http://i.gifboom.com/medias/99d79cd3d2d8428d98eb11d85b5ed3eb.mp4", "gif":"http://livedoor.blogimg.jp/vsokuvip/imgs/1/c/1cc43e81.gif" }]
-
   socket.on('init', function (data) {
-    init(data);
+    init(data.data);
   }); 
 
   socket.on('fuita', function (data) {
-    fuita(data);
+    fuita(data.data);
   });  
 
   socket.on('video_ok', function(data) {
-    addMovie(data);
+    addMovie(data.data) ;
   });
 
   $("#init").click(function () {
-      init(data);
+    init(data);
+//    $(".pictWrap img").hoverpulse();
+//    $(".pictWrap pict").hoverpulse();
   });
   $("#fuita").click(function () {
-      fuita(data);
+    fuita(data);
+ //   $(".pictWrap img").hoverpulse();
+ //   $(".pictWrap pict").hoverpulse();
   });
   $("#video_ok").click(function () {
       addMovie(data[0]);
@@ -33,7 +34,8 @@ $(document).ready(function(){
     console.log("inited:");
     console.log(data);
     target.html('');
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i]);
       addImg(data[i]);
     };
   }                 
@@ -53,9 +55,9 @@ $(document).ready(function(){
     }
   }
   function addMovie (data) {
-    var id = "#fuita_" + data.id;
+    var id = "#fuita_" + data.uid;
     console.log("movie:" + id);
-    $(id).append('<div class="videoWrap"  id="origin_'+ data.id 
+    $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
       + '" style="display:none"><video src="'+ data.origin 
       +'" loop preload="auto" autoplay="true"></video></div>');
   }
@@ -63,12 +65,12 @@ $(document).ready(function(){
    //gifをDOMに追加する
   function addImg (img) {
     console.log(img);
-    var picture = $('<div class="pictWrap" id="fuita_'+ img.id +'"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
+    var picture = $('<div class="pictWrap" id="fuita_'+ img.uid +'"><div class="pict"> <img src="'+ img.gif +'" width="236" height="134"> </div>');
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
       //クリックで元動画再生
-      var video_id = "#origin_" + img.id;
+      var video_id = "#origin_" + img.uid;
       console.log(video_id);
       if ($(video_id).size() > 0) {
         $(video_id).show();
@@ -79,7 +81,6 @@ $(document).ready(function(){
         });
       }
     });
-    //picture.filter(".pictWrap").hoverpulse();
   }
 
   //吹いたダイアログ表示
