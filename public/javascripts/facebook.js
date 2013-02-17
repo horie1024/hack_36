@@ -31,7 +31,7 @@ ref.parentNode.insertBefore(js, ref);
                 if (response.status === 'connected') {
                     var uid = response.authResponse.userID;
                     var accessToken = response.authResponse.accessToken;
-
+                    var msg = '吹きました。\n' + msg;
                     FB.api('/me/feed', 'post', {'access_token' : accessToken, 'message' : msg}, function (res) {
                         console.log(res);
                         console.log('facebook post ok.');
