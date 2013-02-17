@@ -67,14 +67,17 @@ $(document).ready(function(){
     target.prepend(picture);
     picture.click(function(){
       console.log(img.gif);
+      //クリックで元動画再生
       var video_id = "#origin_" + img.id;
       console.log(video_id);
-      overlay.show();
-      $(video_id).show();
+      if ($(video_id).size() > 0) {
+        $(video_id).show();
+        overlay.show();
         overlay.click(function () {
           $(video_id).hide();
           overlay.hide();
-      });
+        });
+      }
     });
     //picture.filter(".pictWrap").hoverpulse();
   }
