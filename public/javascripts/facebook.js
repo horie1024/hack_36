@@ -17,7 +17,7 @@ var FUITA = (function() {
                     var uid = response.authResponse.userID;
                     var accessToken = response.authResponse.accessToken;
 
-                    FB.api('/me/feed', 'post', {'access_token:' accessToken, 'message:' msg}, function(res){
+                    FB.api('/me/feed', 'post', {'access_token:'  + accessToken, 'message:'  + msg}, function (res) {
                         console.log(res);
                         console.log('facebook post ok.');
                     });
