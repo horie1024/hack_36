@@ -141,6 +141,28 @@ html, body, #wrapper {
   font-weight: bold;
 }
 
+#video_dialog {
+  display:none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 370px;
+  box-sizing: border-box;
+  padding: 100px 70px 90px;
+  margin: -175px 0 0 -300px;
+  text-align: center;
+  background: #fff url(../images/styles/dialogbox.jpg) no-repeat;
+  z-index: 999;
+  font-family:antiqueplus;
+}
+
+#video_dialog > video {
+  width: 500px;
+  top: -38px;
+  left: -22px;
+  position: relative;
+}
 /*------original video------*/
 .videoWrap {
   display:none;
