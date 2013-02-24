@@ -6,6 +6,7 @@ $(document).ready(function(){
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
   var dialog = $("#dialog");
+  var video_dialog = $("#video_dialog");
 
   socket.on('init', function (data) {
     init(data.data);
@@ -39,6 +40,12 @@ $(document).ready(function(){
   });
   $("#video_ok").click(function () {
     //video_ok(test);
+  });
+
+  overlay.click(function() {
+    overlay.hide();
+    dialog.hide();
+    video_dialog.hide();
   });
 
   function init (data) {
@@ -87,6 +94,11 @@ $(document).ready(function(){
       + server + img.gif +'" width="306" height="172">'
       + '</div>');
     target.prepend(picture);
+    picture.click(function (){
+      video_dialog.children("video").attr('src', img.origin);
+      overlay.show();
+      video_dialog.show();
+    });
   }
 
   //吹いたダイアログ表示
