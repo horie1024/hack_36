@@ -1,7 +1,8 @@
 var test;
 var youtubeURL;
 $(document).ready(function(){
-  var socket = io.connect('http://www2309uf.sakura.ne.jp/');
+  var server = 'http://www2309uf.sakura.ne.jp/';
+  var socket = io.connect(server);
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
   var dialog = $("#dialog");
@@ -74,7 +75,7 @@ $(document).ready(function(){
     var id = "#fuita_" + data.uid;
     console.log("movie:" + id);
     $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
-      + '" style="display:none"><a href="'+ data.url 
+      + '" style="display:none"><a href="'+ server + data.origin 
       +'" target="_blank" ></a></div>');
     console.log(data);
   }
@@ -83,7 +84,7 @@ $(document).ready(function(){
   function addImg (img) {
     var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'
-      + img.gif +'" width="306" height="172">'
+      + server + img.gif +'" width="306" height="172">'
       + '</div>');
     target.prepend(picture);
   }
