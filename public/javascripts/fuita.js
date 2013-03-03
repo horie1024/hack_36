@@ -95,7 +95,7 @@ $(document).ready(function(){
       + '</div>');
     target.prepend(picture);
     picture.click(function (){
-      video_dialog.children("video").attr('src', img.origin);
+      //video_dialog.children("iframe").attr('src', img.origin);
       overlay.show();
       video_dialog.show();
     });
