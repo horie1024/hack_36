@@ -101,6 +101,7 @@
                 .on("click", function(d) {
                     console.log(d);
                     $('#test').text('Clicked! data = ' + d.fuita_level);
+                    
                     sorted.selectAll('rect')
                     .sort(function(a, b) {
                         return d3.ascending(b.fuita_level, a.fuita_level);
