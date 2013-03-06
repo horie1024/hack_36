@@ -6,18 +6,20 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , dataVis = require('./routes/dataVis')
   , http = require('http')
   , path = require('path')
   , fs = require('fs')
-  , redis = require("redis")
-  , xml2js = require('xml2js')
-  , parseString = require('xml2js').parseString
-  , client = redis.createClient();
+  , redisHandler = require("./models/redis.js");
+  //, redis = require('redis'),
+  //, xml2js = require('xml2js')
+  //, parseString = require('xml2js').parseString
+  //, client = redis.createClient();
 
 var app = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 80);
+  app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
@@ -40,8 +42,36 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var io = require('socket.io').listen(server);
 
+//redisから全データを引いてresultsに渡す
+
+// サンプルデータ
+var resultsData =  [
+                {
+                    'video' : 'mov/.mp4',
+                    'youtube' : 'http://aaaa',
+                    'fuita_level' : 1,
+                    'uid' : 'uid'
+                },
+                {
+                    'video' : 'mov/.mp4',
+                    'youtube' : 'http://bbb',
+                    'fuita_level' : 2,
+                    'uid' : 'uid'
+                },
+                {
+                    'video' : 'mov/.mp4',
+                    'youtube' : 'http://cccc',
+                    'fuita_level' : 3,
+                    'uid' : 'uid'
+                }
+                ];
+
+var dataVis = dataVis.results(resultsData);
+
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.get('/results', dataVis.init);
+app.get('/fetchdata', dataVis.fetchData);
 
 var exec = require('child_process').exec, 
 cmd = '';
@@ -76,8 +106,8 @@ var fileHandler = function (path, data, socket) {
     return {
         writeFile :  function() {
             //var execEncode = execEncode;
-            for (var i = 0; i < data.length; i++) {
-                var binary = new Buffer(data[i], 'base64');
+            for (var i = 0; i < data.frames.length; i++) {
+                var binary = new Buffer(data.frames[i], 'base64');
                 //console.log('data : ' + data[i]);
                 fs.writeFileSync(imgPath + '/' + ("0" + i).slice(-2) + '.jpeg', binary, function (err, data) {
                     if (err) {
@@ -86,7 +116,7 @@ var fileHandler = function (path, data, socket) {
                 });
             }
             console.log('start create gif');
-            setTimeout(function() { gifEncode(path, socket)}, 500);
+            setTimeout(function() { gifEncode(path, data.level, socket)}, 500);
             //gifEncode(path, socket);
             console.log('start create video');
             videoEncode(path, socket);
@@ -104,37 +134,62 @@ var videoEncode = function (uid, socket) {
             console.log('stdout: '+(stdout||'none'));
             console.log('stderr: '+(stderr||'none'));
 
-            var data = [
-                {
-                    'video' : 'mov/' + uid + '/' + uid + '.mp4',
-                    'uid' : uid
-                }
-            ];
-
-            io.sockets.emit('video_ok', {'data':data});
+            //io.sockets.emit('video_ok', {'data':data});
             var cmd = 'bin/youtube_upload.py public/mov/' + uid + '/'+ uid +'.mp4 ' + uid;
             console.log(cmd);
             exec(cmd, {timeout : 30000}, function (error, stdout, stderr) {
                 console.log('error:' + error);
                 console.log('stdout: '+(stdout||'none'));
                 console.log('stderr: '+(stderr||'none'));
-                var parser = new xml2js.Parser();
+
+                // 標準出力から正規表現で動画IDを抜き出す
+                // stdoutは文字列オブジェクトだと思うが、違ったらString型にキャスト
+                if (typeof stdout != 'string') {
+                    stdout = String(stdout);
+                } 
+                var videoId = stdout.match(/http:\/\/gdata.youtube.com\/feeds\/api\/videos\/([^<]*)/i);
+
+                // そこから埋め込みようURLを作成
+                var youtubeUrl = 'http://www.youtube.com/embed/' + videoId;
+
+                // redisからuidをキーにしてデータを読み込み、youtubeプロパティに生成したURLを格納後再度保存
+                redisHandler.getData(uid, function(dataObj) {
+                    dataObj.youtube = youtubeUrl;
+                    redisHandler.setData(uid, dataObj);
+                });
+
+                // フォーマットを整えsocketで送信
+                var data = [
+                {
+                    'video' : 'mov/' + uid + '/' + uid + '.mp4',
+                    'youtube' : youtubeUrl,
+                    'uid' : uid
+                }
+                ];
+
+                io.sockets.emit('video_ok', {'data':data});
+                
+                // Facebook
+                io.sockets.emit('post_facebook', {'url' : 'http://www.youtube.com/watch?v=' + videoId});
+
+                /*var parser = new xml2js.Parser();
                 parser.parseString(stdout, function (err, result) {
                     if (err) {
                         console.log('parse xml error at line 121 : ' + err);
                     }
                     //console.log('youtube url = ' + result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']);
                     console.log(result);
-                    var url = result['ns0:entry']['ns1:group'][0]['ns1:player'][0]['$']['url']; 
+                    var url = result['ns0:entry']['ns1:group'][0]['ns1:player'][0]['$']['url'];
+                    io.sockets.emit('video_ok', {'data':data}); 
                     io.sockets.emit('post_facebook', {'url':url});
-                });
+                });*/
             });
         }
     )
 };
 
 // 画像からgifへのエンコード
-var gifEncode = function (uid, socket) {
+var gifEncode = function (uid, level, socket) {
     var inputFiles = "";
     for (var i=2; i<30; i+=3) {
         inputFiles += "./public/images/" + uid + "/" + ("0" + i).slice(-2) + ".jpeg ";
@@ -150,6 +205,8 @@ var gifEncode = function (uid, socket) {
                 {
                     'origin' : 'mov/' + uid + '/' + uid + '.mp4',
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
+                    'youtube' : undefined,
+                    'fuita_level' : level,
                     'uid' : uid
                 };
 
@@ -163,6 +220,7 @@ var gifEncode = function (uid, socket) {
                 {
                     'origin' : 'mov/' + uid + '/' + uid + '.mp4',
                     'gif' : 'images/' + uid + '/' + uid + '.gif',
+                    'fuita_level' : level,
                     'uid' : uid
                 }
             ];
@@ -176,14 +234,19 @@ var gifEncode = function (uid, socket) {
 // list : [id1, id2, id3]
 // id : {originPath, gifPath}
 // redisのデータを操作する関数
-var redisHandler = (function() {
+/*var redisHandler = (function() {
     return {
         setList : function (key, uid) {
             var value = JSON.stringify(uid);
             client.lpush(key, value);
         },
-        getList : function (key, callback) {
-            var  list = client.lrange(key, 0, 35, function(err, obj) {
+        getList : function (key, callback, num) {
+            
+            if (typeof num == 'undefined') {
+                var num = -1;
+            } 
+
+            var  list = client.lrange(key, 0, num, function(err, obj) {
                 if (err) {
                     console.log('redis set data err');
                 }
@@ -222,9 +285,12 @@ var redisHandler = (function() {
                 }
                 callback(obj);
             });
+        },
+        flushDb : function(callback) {
+                client.flushdb(callback);
         }
     };
-})();
+})();*/
 
 io.sockets.on('connection', function (socket) {
 
@@ -236,8 +302,7 @@ io.sockets.on('connection', function (socket) {
         var uid = uniqueId.create();
         console.log('create uid = ' + uid);
 
-        fileHandler(uid, data.frames, socket).writeFile();
-
+        fileHandler(uid, data, socket).writeFile();
     });
 
     // FE側との調整して仕様決定
@@ -255,5 +320,5 @@ io.sockets.on('connection', function (socket) {
             console.log('send data to FE');
             socket.emit('init', {'data': dataObj});
         });
-    });
+    }, 35);
 });
