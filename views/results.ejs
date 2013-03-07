@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src = "//d3js.org/d3.v3.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p id = 'disp'></p>
+    <p id = 'svg'></p>
+    <p id = 'sorted'></p>
+    <p id = 'test'></p>
+    <script type="text/javascript">
+        (function() {
+            $.get('http://localhost:3000/fetchdata', function(data){
+                console.log(data);
+                graphing(data);
+            });
+
+            var graphing = function (dataset) {
+                /*var dataset = [],
+                dataLength = 255,
+                maxOfData = 40;
+
+                for (var i = 0; i < dataLength; i++) {
+                    var newNumber = Math.random() * maxOfData;
+                    newNumber = ~~newNumber;
+                    dataset.push(newNumber);
+                };
+                */
+                var dataLength = dataset.length,
+                maxOfData = 3,
+                w = dataLength * 40,
+                h = maxOfData * 100,
+                barPadding = 1;
+        
+                //Create SVG element
+                var svg = d3.select("#svg")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+                svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", function(d,i) {
+                    return i * (w/dataset.length);
+                })
+                .attr("y", function(d) {
+                    return h - (d.fuita_level * 10);
+                })
+                .attr("width", w/dataset.length - barPadding)
+                .attr("height", function(d) {
+                    return d.fuita_level * 10;
+                })
+                .attr("fill", "teal");
+
+                svg.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function(d) {
+                    return d.fuita_level;
+                })
+                .attr("x", function(d, i) {
+                    return i * (w / dataset.length) + 10;  // +5
+                })
+                .attr("y", function(d) {
+                    return h - (d.fuita_level * 10) + 15;              // +15
+                });
+
+                $('#disp').text('データの個数:' + dataLength);
+
+                var sorted = d3.select('#sorted')
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+                dataset = dataset.sort(function(a, b) {
+                    return d3.ascending(b.fuita_level, a.fuita_level);
+                });
+
+                sorted.selectAll('rect')
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", function(d,i) {
+                    return i * (w/dataset.length);
+                })
+                .attr("y", function(d) {
+                    return h - (d.fuita_level * 10);
+                })
+                .attr("width", w/dataset.length - barPadding)
+                .attr("height", function(d) {
+                    return d.fuita_level * 10;
+                })
+                .attr("fill", 'orange')
+                .on("click", function(d) {
+                    console.log(d);
+                    $('#test').text('Clicked! data = ' + d.fuita_level);
+                    
+                    sorted.selectAll('rect')
+                    .sort(function(a, b) {
+                        return d3.ascending(b.fuita_level, a.fuita_level);
+                    })
+                    .transition()
+                    .duration(100);
+                });
+            }
+
+        }());
+    </script>
+</body>
+</html>
