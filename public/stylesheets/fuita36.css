@@ -104,9 +104,6 @@ html, body, #wrapper {
   -webkit-transform: rotate(-3deg) translate(0, -5%);
   z-index: 99;
 }
-.pictWrap img:hover {
-  opacity:0.5;
-}
 /*----------dialog----------*/
 #dialog-overlay {
   display:none;
@@ -146,7 +143,6 @@ html, body, #wrapper {
   font-size: 38px;
   font-weight: bold;
 }
-
 /*------original video------*/
 .videoWrap {
   display:none;
@@ -163,7 +159,6 @@ html, body, #wrapper {
   z-index: 999;
   font-family:antiqueplus;
 }
-
 .videoWrap video {
   position: fixed;
   top: 50%;
