@@ -1,7 +1,7 @@
 var test;
 var youtubeURL;
 $(document).ready(function(){
-  var server = 'http://www2309uf.sakura.ne.jp/';
+  var server = 'http://www2309uf.sakura.ne.jp:3000/';
   var socket = io.connect(server);
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
