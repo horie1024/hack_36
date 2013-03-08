@@ -76,7 +76,7 @@ img {
 }
 body {
   margin: 0 auto;
-  background: url(../images/styles/bg.jpg);
+  background: #000;/*background: url(../images/styles/bg.jpg);*/
 }
 html, body, #wrapper {
   width: 100%;
@@ -96,8 +96,13 @@ html, body, #wrapper {
   left: 50%;
   margin-top: -85px;
   margin-left: -153px;
-  border: solid 1px #5A4D3C;
-  -webkit-box-shadow: 0 0 0 6px #A88149, 0 2px 3px 7px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 0 3px #000;
+}
+#wrapper .big {
+  position: relative;
+  -webkit-box-shadow: 0 0 0 13px red, 0 0 0 15px black;
+  -webkit-transform: rotate(-3deg) translate(0, -5%);
+  z-index: 99;
 }
 /*----------dialog----------*/
 #dialog-overlay {
@@ -109,7 +114,7 @@ html, body, #wrapper {
   left: 0px;
   opacity: 0.6;
   background: black;
-  z-index: 99;
+  z-index: 999;
 }
 #dialog {
   display:none;
@@ -117,24 +122,25 @@ html, body, #wrapper {
   top: 50%;
   left: 50%;
   width: 600px;
-  height: 370px;
+  height: 320px;
   box-sizing: border-box;
-  padding: 100px 70px 90px;
+  padding: 70px 50px 70px;
   margin: -175px 0 0 -300px;
+  -webkit-box-shadow: 0 3px 0 1px black;
   text-align: center;
-  background: #fff url(../images/styles/dialogbox.jpg) no-repeat;
-  z-index: 999;
+  background: #fff no-repeat;
+  z-index: 9999;
   font-family:antiqueplus;
 }
 #dialog .title {
   margin-bottom: 40px;
-  font-size: 25px;
+  font-size: 28px;
   font-weight: bold;
   color: #715c1f;
 }
 #dialog .textBody {
   padding-bottom: 8px;
-  font-size: 34px;
+  font-size: 38px;
   font-weight: bold;
 }
 /*---------- debug ----------*/
