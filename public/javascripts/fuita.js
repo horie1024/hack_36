@@ -83,7 +83,7 @@ $(document).ready(function(){
   //YouTube動画を追加する
   function addMovie (data, picture) {
     picture.click(function (){
-      video_dialog.children("iframe").attr('src', data.youtube);
+      video_dialog.children("iframe").attr('src', data.origin);
       overlay.show();
       video_dialog.show();
     });
