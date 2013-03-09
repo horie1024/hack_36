@@ -16,6 +16,7 @@ var express = require('express')
   //, parseString = require('xml2js').parseString
   //, client = redis.createClient();
 
+
 var app = express();
 
 app.configure(function(){
@@ -175,6 +176,7 @@ var videoEncode = function (uid, socket) {
                     if (err) {
                         console.log('parse xml error at line 121 : ' + err);
                     }
+                    if (!result) return;
                     //console.log('youtube url = ' + result['ns0:entry']['ns2:group'][0]['ns2:player'][0]['$']['url']);
                     console.log(result);
                     var url = result['ns0:entry']['ns1:group'][0]['ns1:player'][0]['$']['url'];
@@ -325,7 +327,7 @@ io.sockets.on('connection', function (socket) {
     redisHandler.getList('uidList', function(dataListObj){
         redisHandler.getDataFromLists(dataListObj, function(dataObj){
             console.log('send data to FE');
-            socket.emit('init', {'data': dataObj});
+            if (socket) socket.emit('init', {'data': dataObj});
         });
     }, 35);
 });

@@ -1,10 +1,12 @@
 var test;
 var youtubeURL;
 $(document).ready(function(){
-  var socket = io.connect('http://www2309uf.sakura.ne.jp/');
+  var server = 'http://www2309uf.sakura.ne.jp:3000/';
+  var socket = io.connect(server);
   var target = $("#wrapper");
   var overlay = $("#dialog-overlay");
   var dialog = $("#dialog");
+  var video_dialog = $("#video_dialog");
 
   socket.on('init', function (data) {
     init(data.data);
@@ -40,12 +42,19 @@ $(document).ready(function(){
     //video_ok(test);
   });
 
+  overlay.click(function() {
+    overlay.hide();
+    dialog.hide();
+    video_dialog.hide();
+  });
+
   function init (data) {
     console.log("inited:");
     console.log(data);
     target.html('');
     for (var i = data.length-1; i >= 0; i--) {
-      addImg(data[i]);
+      var picture = addImg(data[i]);
+      addMovie(data[i], picture);
     };
   }                 
 
@@ -59,7 +68,8 @@ $(document).ready(function(){
 
   function video_ok (data) {
     console.log("video_ok:");
-    addMovie(data[0]);
+    var id = '#fuita_' + data.uid;
+    addMovie(data[0], $(id));
   }
 
   function removeFirstImage() {
@@ -69,23 +79,24 @@ $(document).ready(function(){
       $(".pictWrap:last").remove();
     }
   }
-  function addMovie (data) {
-    console.log(data);
-    var id = "#fuita_" + data.uid;
-    console.log("movie:" + id);
-    $(id).append('<div class="videoWrap"  id="origin_'+ data.uid 
-      + '" style="display:none"><a href="'+ data.url 
-      +'" target="_blank" ></a></div>');
-    console.log(data);
+
+  //YouTube動画を追加する
+  function addMovie (data, picture) {
+    picture.click(function (){
+      video_dialog.children("iframe").attr('src', data.youtube);
+      overlay.show();
+      video_dialog.show();
+    });
   }
 
    //gifをDOMに追加する
   function addImg (img) {
     var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'
-      + img.gif +'" width="306" height="172">'
+      + server + img.gif +'" width="306" height="172">'
       + '</div>');
     target.prepend(picture);
+    return picture;
   }
 
   //吹いたダイアログ表示
