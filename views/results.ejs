@@ -3,21 +3,69 @@
 <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
     <script src = "//d3js.org/d3.v3.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
 </head>
 <body>
-    <h1><%= title %></h1>
-    <p id = 'disp'></p>
-    <p id = 'svg'></p>
-    <p id = 'sorted'></p>
+    <!--<div class="hero-unit">
+        <h1>国際GIFアニメアワード2013</h1>
+        <p>吹至多三十六景を使って吹いた際にどれくらいプロペラが回ったかfuita_levelという尺度にしてみました。</br>
+        それだけだとわかり憎いのでグラフにしてみました。</p>
+    </div>-->
+    <div class="container-fluid">
+        <div class="span4" >
+            <h1>吹至多三十六景</h1>
+        </br>
+        </div>
+        <div class="span2">
+            <!--<h4><p class="text-center">総吹数</p></h4>--><p id = 'disp'></p>
+        </div>
+        <div class="span3">
+            <!--<h4><p class="text-center">平均吹至多</p></h4>-->
+            <p id = 'average'></p>
+        </div>
+        <div class="span3">
+            <h4><p class="text-left"></p></h4>
+            <span class="label label-important">とても吹いた</span>
+            <span class="label label-warning">吹いた</span>
+            <span class="label label-info">少し吹いた</span>
+        </div>
+        <div id = 'graph1' class="span12" >
+            <p id = 'svg'></p>
+        </div>
+        </br>
+        <div id = "graph2" class="span12" >
+        </br>
+                <p id = 'sorted'></p>
+        </div>
+    </div>
+    
     <p id = 'test'></p>
     <script type="text/javascript">
         (function() {
+
             $.get('http://localhost:3000/fetchdata', function(data){
                 console.log(data);
+                $('#svg').remove();
+                $('#graph1').append("<p id = 'svg'></p>");
+                $('#sorted').remove();
+                $('#graph2').append("<p id = 'sorted'></p>");
                 graphing(data);
             });
+
+            setInterval(function(){
+                //console.log('aaaa');
+            $.get('http://localhost:3000/fetchdata', function(data){
+                console.log(data);
+                $('#svg').remove();
+                $('#graph1').append("<p id = 'svg'></p>");
+                $('#sorted').remove();
+                $('#graph2').append("<p id = 'sorted'></p>");
+                graphing(data);
+            });
+        }, 5000);
 
             var graphing = function (dataset) {
                 /*var dataset = [],
@@ -32,10 +80,10 @@
                 */
                 var dataLength = dataset.length,
                 maxOfData = 3,
-                w = dataLength * 40,
-                h = maxOfData * 100,
+                w = dataLength * 150,
+                h = maxOfData * 150,
                 barPadding = 1;
-        
+
                 //Create SVG element
                 var svg = d3.select("#svg")
                 .append("svg")
@@ -50,29 +98,63 @@
                     return i * (w/dataset.length);
                 })
                 .attr("y", function(d) {
-                    return h - (d.fuita_level * 10);
+                    return h - (d.fuita_level * 100);
                 })
                 .attr("width", w/dataset.length - barPadding)
                 .attr("height", function(d) {
-                    return d.fuita_level * 10;
+                    return d.fuita_level * 100;
                 })
-                .attr("fill", "teal");
+                .attr("fill", function(d) {
 
-                svg.selectAll("text")
-                .data(dataset)
-                .enter()
-                .append("text")
-                .text(function(d) {
-                    return d.fuita_level;
-                })
-                .attr("x", function(d, i) {
-                    return i * (w / dataset.length) + 10;  // +5
-                })
-                .attr("y", function(d) {
-                    return h - (d.fuita_level * 10) + 15;              // +15
+                    if (d.fuita_level === 3) {
+                        return 'red';
+                    } else if (d.fuita_level === 2) {
+                        return 'orange';
+                    } else if (d.fuita_level === 1) {
+                        return 'blue';
+                    }
                 });
 
-                $('#disp').text('データの個数:' + dataLength);
+                for (var i=0;i<dataset.length;i++) {
+                    svg.append("svg:image")
+                    .attr("class", "circle")
+                    .attr("xlink:href", dataset[i].gif) //ノード用画像の設定
+                    .attr("x", i * (w/dataset.length))
+                    //.attr("y", h - (dataset[i].fuita_level * 100))
+                    .attr("y", (dataset[i].fuita_level))
+                    .attr("width", "150px")
+                    .attr("height", "100px");
+                }
+
+                /*svg.selectAll("svg:image")
+                .data(dataset)
+                .enter()
+                .append('svg:image')
+                .attr('xlink:href', function(d){
+                    return 'https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-prn1/72672_240446476092122_1488170569_n.jpg';
+                })
+              .text(function(d) {
+                    return d.fuita_level;
+                    //return d.fuita_level;
+                })
+                .attr("width", function(d, i) {
+                    return i * (w / dataset.length) + 10;  // +5
+                })
+                .attr('height', function(d) {
+                    return h - (d.fuita_level * 100) + 15;              // +15
+                });*/
+
+                $('#disp').html('<h3><p class="text-center">総吹数 ' + dataLength + '</p></h3>');
+                
+                // average
+                var tmp = 0;
+                for (var i = 0; i < dataset.length;i++) {
+                    tmp += dataset[i].fuita_level;
+                }
+                var average = tmp/dataset.length;
+                average = average * 100;
+                average = (~~average)/100
+                $('#average').html('<h3><p class="text-center">平均吹至多 ' + average + '</p></h3>');
 
                 var sorted = d3.select('#sorted')
                 .append("svg")
@@ -91,27 +173,27 @@
                     return i * (w/dataset.length);
                 })
                 .attr("y", function(d) {
-                    return h - (d.fuita_level * 10);
+                    return h - (d.fuita_level * 100);
                 })
                 .attr("width", w/dataset.length - barPadding)
                 .attr("height", function(d) {
-                    return d.fuita_level * 10;
+                    return d.fuita_level * 100;
                 })
                 .attr("fill", 'orange')
                 .on("click", function(d) {
                     console.log(d);
-                    $('#test').text('Clicked! data = ' + d.fuita_level);
-                    
+                    $('#test').html('Clicked! data = ' + d.fuita_level + '</br>youtube url is ' + d.youtube);
+
                     sorted.selectAll('rect')
                     .sort(function(a, b) {
                         return d3.ascending(b.fuita_level, a.fuita_level);
                     })
                     .transition()
-                    .duration(100);
+                    .duration(100)
                 });
             }
 
-        }());
+        }($));
     </script>
 </body>
 </html>

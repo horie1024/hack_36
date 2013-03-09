@@ -42,10 +42,8 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var io = require('socket.io').listen(server);
 
-//redisから全データを引いてresultsに渡す
-
 // サンプルデータ
-var resultsData =  [
+/*var resultsData =  [
                 {
                     'video' : 'mov/.mp4',
                     'youtube' : 'http://aaaa',
@@ -64,9 +62,9 @@ var resultsData =  [
                     'fuita_level' : 3,
                     'uid' : 'uid'
                 }
-                ];
+                ];*/
 
-var dataVis = dataVis.results(resultsData);
+var dataVis = dataVis.results();
 
 app.get('/', routes.index);
 app.get('/users', user.list);
@@ -194,6 +192,15 @@ var gifEncode = function (uid, level, socket) {
     for (var i=2; i<30; i+=3) {
         inputFiles += "./public/images/" + uid + "/" + ("0" + i).slice(-2) + ".jpeg ";
     }
+    // fuita_levelの変換
+    if (level < 200) {
+        level = 1;
+    } else if (level < 500){
+        level = 2;
+    } else {
+        level = 3;
+    }
+
     //var cmd = 'sync;convert ./public/images/' + uid + '/*.jpeg ./public/images/' + uid + '/' + uid + '.gif'
     var cmd = 'sync;convert -delay 20 ' + inputFiles + ' -resize 37% -crop 236x133+0+22 +repage  ./public/images/' + uid + '/' + uid + '.gif';
 
