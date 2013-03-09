@@ -91,10 +91,21 @@ $(document).ready(function(){
 
    //gifをDOMに追加する
   function addImg (img) {
+    if (img.fuita_level == 3) {
+        var img_tag = '<img class = "big" src="' + server + img.gif +'" width="306" height="172">';
+    } else {
+        var img_tag = '<img src="' + server + img.gif +'" width="306" height="172">';
+    }
     var picture = $('<div class="pictWrap" id="fuita_'
+        + img.uid +'">'
+        + img_tag
+        + '</div>');
+
+    // ほりえ修正箇所
+    /*var picture = $('<div class="pictWrap" id="fuita_'
       + img.uid +'"><img src="'
       + server + img.gif +'" width="306" height="172">'
-      + '</div>');
+      + '</div>');*/
     target.prepend(picture);
     return picture;
   }
