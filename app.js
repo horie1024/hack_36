@@ -149,7 +149,8 @@ var videoEncode = function (uid, socket) {
                 var videoId = stdout.match(/http:\/\/gdata.youtube.com\/feeds\/api\/videos\/([^<]*)/i);
 
                 // そこから埋め込みようURLを作成
-                var youtubeUrl = 'http://www.youtube.com/embed/' + videoId;
+                console.log(videoId);
+                var youtubeUrl = 'http://www.youtube.com/embed/' + videoId[1];
 
                 // redisからuidをキーにしてデータを読み込み、youtubeプロパティに生成したURLを格納後再度保存
                 redisHandler.getData(uid, function(dataObj) {

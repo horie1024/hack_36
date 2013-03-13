@@ -32,21 +32,23 @@
             <span class="label label-warning">吹いた</span>
             <span class="label label-info">少し吹いた</span>
         </div>
-        <div id = 'graph1' class="span12" >
+        <div id = 'graph1'>
             <p id = 'svg'></p>
         </div>
         </br>
+        <!--
         <div id = "graph2" class="span12" >
         </br>
                 <p id = 'sorted'></p>
         </div>
+        -->
     </div>
     
     <p id = 'test'></p>
     <script type="text/javascript">
         (function() {
 
-            $.get('http://localhost:3000/fetchdata', function(data){
+            $.get('http://www2309uf.sakura.ne.jp:3000/fetchdata', function(data){
                 console.log(data);
                 $('#svg').remove();
                 $('#graph1').append("<p id = 'svg'></p>");
@@ -57,7 +59,7 @@
 
             setInterval(function(){
                 //console.log('aaaa');
-            $.get('http://localhost:3000/fetchdata', function(data){
+            $.get('http://www2309uf.sakura.ne.jp:3000/fetchdata', function(data){
                 console.log(data);
                 $('#svg').remove();
                 $('#graph1').append("<p id = 'svg'></p>");
@@ -118,7 +120,7 @@
                 for (var i=0;i<dataset.length;i++) {
                     svg.append("svg:image")
                     .attr("class", "circle")
-                    .attr("xlink:href", dataset[i].gif) //ノード用画像の設定
+                    .attr("xlink:href", 'http://www2309uf.sakura.ne.jp:3000/' + dataset[i].gif) //ノード用画像の設定
                     .attr("x", i * (w/dataset.length))
                     //.attr("y", h - (dataset[i].fuita_level * 100))
                     .attr("y", (dataset[i].fuita_level))
